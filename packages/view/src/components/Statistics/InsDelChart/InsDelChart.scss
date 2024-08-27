@@ -1,0 +1,15 @@
+@import "styles/app";
+
+.ins-del-chart {
+  width: 16rem;
+  text {
+    fill: var(--primary-color);
+    filter: invert(100) grayscale(100) contrast(100);
+  }
+}
+
+.ins-del-chart-title {
+  font-size: $font-size-title;
+  font-weight: $font-weight-semibold;
+  margin-bottom: 1rem;
+}
