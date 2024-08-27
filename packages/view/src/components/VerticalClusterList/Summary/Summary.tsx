@@ -1,19 +1,19 @@
-import { useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
 
-import type { ClusterNode } from "types";
 import { Detail } from "components";
 import { useGlobalData } from "hooks";
+import type { ClusterNode } from "types";
 
-import "./Summary.scss";
 import { Author } from "../../@common/Author";
-import { selectedDataUpdater } from "../VerticalClusterList.util";
 import { ClusterGraph } from "../ClusterGraph";
 import { getClusterSizes } from "../ClusterGraph/ClusterGraph.util";
+import { selectedDataUpdater } from "../VerticalClusterList.util";
+import "./Summary.scss";
 
-import { usePreLoadAuthorImg } from "./Summary.hook";
-import { getInitData, getClusterIds, getClusterById } from "./Summary.util";
 import { Content } from "./Content";
+import { usePreLoadAuthorImg } from "./Summary.hook";
 import type { Cluster } from "./Summary.type";
+import { getClusterById, getClusterIds, getInitData } from "./Summary.util";
 
 const Summary = () => {
   const { filteredData: data, selectedData, setSelectedData } = useGlobalData();

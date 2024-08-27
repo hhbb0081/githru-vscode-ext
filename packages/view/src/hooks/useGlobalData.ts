@@ -15,9 +15,11 @@ type GlobalDataState = {
   filteredRange: DateFilterRange;
   filteredData: ClusterNode[];
   selectedData: ClusterNode[];
+  selectedCommitId: string;
   setFilteredData: Dispatch<SetStateAction<ClusterNode[]>>;
   setSelectedData: Dispatch<SetStateAction<ClusterNode[]>>;
   setFilteredRange: Dispatch<SetStateAction<DateFilterRange>>;
+  setSelectedCommitId: Dispatch<SetStateAction<string>>;
   loading: boolean;
   setLoading: Dispatch<SetStateAction<boolean>>;
   branchList: string[];

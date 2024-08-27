@@ -1,17 +1,19 @@
-import dayjs from "dayjs";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
-import RemoveCircleRoundedIcon from "@mui/icons-material/RemoveCircleRounded";
-import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import CommitRoundedIcon from "@mui/icons-material/CommitRounded";
+import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
+import RemoveCircleRoundedIcon from "@mui/icons-material/RemoveCircleRounded";
 import RestorePageRoundedIcon from "@mui/icons-material/RestorePageRounded";
+import dayjs from "dayjs";
 
 import { Author } from "components/@common/Author";
 
-import { useCommitListHide } from "./Detail.hook";
-import { getCommitListDetail } from "./Detail.util";
 import { FIRST_SHOW_NUM } from "./Detail.const";
-import type { DetailProps, DetailSummaryProps, DetailSummaryItem } from "./Detail.type";
+import { useCommitListHide } from "./Detail.hook";
+import type { DetailProps, DetailSummaryItem, DetailSummaryProps } from "./Detail.type";
+import { getCommitListDetail } from "./Detail.util";
 
+import { useGlobalData } from "hooks";
+import { CommitNode } from "types";
 import "./Detail.scss";
 
 const DetailSummary = ({ commitNodeListInCluster }: DetailSummaryProps) => {
@@ -54,46 +56,58 @@ const Detail = ({ selectedData, clusterId, authSrcMap }: DetailProps) => {
     navigator.clipboard.writeText(id);
   };
 
+  const { setSelectedCommitId } = useGlobalData();
+  const onClickCommitNode = (commitId: string) => () => {
+    console.log(clusterId);
+    setSelectedCommitId(commitId);
+  };
+
   if (!selectedData) return null;
 
   return (
     <>
       <DetailSummary commitNodeListInCluster={commitNodeListInCluster} />
       <ul className="detail__commit-list__container">
-        {commitNodeList.map(({ commit }) => {
-          const { id, message, author, commitDate } = commit;
+        {commitNodeList.map((node: CommitNode) => {
+          const { id, message, author, commitDate } = node.commit;
           return (
             <li
               key={id}
               className="commit-item"
             >
-              <div className="commit-detail">
-                <div className="avatar-message">
-                  {authSrcMap && (
-                    <Author
-                      name={author.names.toString()}
-                      src={authSrcMap[author.names.toString()]}
-                    />
-                  )}
-                  <div className="message-container">
-                    <span className="message">{message}</span>
+              <button
+                type="button"
+                className="commit-detail-button"
+                onClick={onClickCommitNode(id)}
+              >
+                <div className="commit-detail">
+                  <div className="avatar-message">
+                    {authSrcMap && (
+                      <Author
+                        name={author.names.toString()}
+                        src={authSrcMap[author.names.toString()]}
+                      />
+                    )}
+                    <div className="message-container">
+                      <span className="message">{message}</span>
+                    </div>
                   </div>
+                  <span className="author-date">
+                    {author.names[0]}, {dayjs(commitDate).format("YY. M. DD. a h:mm")}
+                  </span>
                 </div>
-                <span className="author-date">
-                  {author.names[0]}, {dayjs(commitDate).format("YY. M. DD. a h:mm")}
-                </span>
-              </div>
-              <div className="commit-id">
-                <span
-                  onClick={handleCommitIdCopy(id)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={handleCommitIdCopy(id)}
-                >
-                  {id.slice(0, 6)}
-                  <span className="commit-id__tooltip">{id}</span>
-                </span>
-              </div>
+                <div className="commit-id">
+                  <span
+                    onClick={handleCommitIdCopy(id)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={handleCommitIdCopy(id)}
+                  >
+                    {id.slice(0, 6)}
+                    <span className="commit-id__tooltip">{id}</span>
+                  </span>
+                </div>
+              </button>
             </li>
           );
         })}

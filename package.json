@@ -17,6 +17,7 @@
     "./packages/*"
   ],
   "dependencies": {
+    "@mui/icons-material": "^5.16.7",
     "generator-code": "^1.6.10",
     "yo": "^1.4.5"
   }

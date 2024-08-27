@@ -10,6 +10,7 @@ export const GlobalDataProvider = ({ children }: PropsWithChildren) => {
   const [data, setData] = useState<ClusterNode[]>([]);
   const [filteredData, setFilteredData] = useState<ClusterNode[]>(data);
   const [selectedData, setSelectedData] = useState<ClusterNode[]>([]);
+  const [selectedCommitId, setSelectedCommitId] = useState<string>("");
   const [filteredRange, setFilteredRange] = useState<DateFilterRange>(undefined);
 
   const [branchList, setBranchList] = useState<string[]>([]);
@@ -38,6 +39,8 @@ export const GlobalDataProvider = ({ children }: PropsWithChildren) => {
       setFilteredData,
       selectedData,
       setSelectedData,
+      selectedCommitId,
+      setSelectedCommitId,
       loading,
       setLoading,
       branchList,
@@ -51,7 +54,7 @@ export const GlobalDataProvider = ({ children }: PropsWithChildren) => {
       repo,
       setRepo,
     }),
-    [data, filteredRange, filteredData, selectedData, branchList, selectedBranch, loading, owner, repo]
+    [data, filteredRange, filteredData, selectedCommitId, selectedData, branchList, selectedBranch, loading, owner, repo]
   );
 
   return <GlobalDataContext.Provider value={value}>{children}</GlobalDataContext.Provider>;
