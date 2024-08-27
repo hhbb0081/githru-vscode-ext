@@ -51,6 +51,7 @@ const Detail = ({ selectedData, clusterId, authSrcMap }: DetailProps) => {
   const commitNodeListInCluster =
     selectedData?.filter((selected) => selected.commitNodeList[0].clusterId === clusterId)[0].commitNodeList ?? [];
   const { commitNodeList, toggle, handleToggle } = useCommitListHide(commitNodeListInCluster);
+  const { repo, owner } = useGlobalData();
   const isShow = commitNodeListInCluster.length > FIRST_SHOW_NUM;
   const handleCommitIdCopy = (id: string) => async () => {
     navigator.clipboard.writeText(id);
@@ -96,18 +97,21 @@ const Detail = ({ selectedData, clusterId, authSrcMap }: DetailProps) => {
                     {author.names[0]}, {dayjs(commitDate).format("YY. M. DD. a h:mm")}
                   </span>
                 </div>
-                <div className="commit-id">
-                  <span
-                    onClick={handleCommitIdCopy(id)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={handleCommitIdCopy(id)}
-                  >
-                    {id.slice(0, 6)}
-                    <span className="commit-id__tooltip">{id}</span>
-                  </span>
-                </div>
+                <span className="author-date">
+                  {author.names[0]}, {dayjs(commitDate).format("YY. M. DD. a h:mm")}
+                </span>
               </button>
+              <div className="commit-id">
+                <a
+                  href={`https://github.com/${owner}/${repo}/commit/${id}`}
+                  onClick={handleCommitIdCopy(id)}
+                  tabIndex={0}
+                  onKeyDown={handleCommitIdCopy(id)}
+                >
+                  {id.slice(0, 6)}
+                  <span className="commit-id__tooltip">{id}</span>
+                </a>
+              </div>
             </li>
           );
         })}
