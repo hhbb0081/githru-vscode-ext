@@ -1,24 +1,27 @@
-import * as d3 from "d3";
 import type { HierarchyRectangularNode } from "d3";
+import * as d3 from "d3";
 import type { RefObject } from "react";
 import { useEffect, useRef } from "react";
 
 import { PRIMARY_COLOR_VARIABLE_NAME } from "../../../constants/constants";
 import { useGetSelectedData } from "../Statistics.hook";
 
-import { getFileChangesTree } from "./FileIcicleSummary.util";
-import type { FileChangesNode } from "./FileIcicleSummary.type";
 import {
-  WIDTH,
-  MAX_DEPTH,
-  HEIGHT,
-  SINGLE_RECT_WIDTH,
   FONT_SIZE,
+  HEIGHT,
   LABEL_VISIBLE_HEIGHT,
+  MAX_DEPTH,
   OPACITY_CODE,
+  SINGLE_RECT_WIDTH,
+  WIDTH,
 } from "./FileIcicleSummary.const";
+import type { FileChangesNode } from "./FileIcicleSummary.type";
+import { getFileChangesTree } from "./FileIcicleSummary.util";
 
+import { InsDelChart } from "../InsDelChart";
 import "./FileIcicleSummary.scss";
+
+let currentPath: string;
 
 const partition = (data: FileChangesNode) => {
   const root = d3
@@ -90,6 +93,7 @@ const drawIcicleTree = async ($target: RefObject<SVGSVGElement>, data: FileChang
     }
 
     focus = targetNode;
+    currentPath = targetNode.name;
     const isRootFocused = focus.depth === 0;
 
     root.each((d) => {
@@ -136,10 +140,13 @@ const FileIcicleSummary = () => {
   }
 
   return (
-    <div className="file-icicle-summary">
-      <p className="file-icicle-title">File Summary</p>
-      <svg ref={$summary} />
-    </div>
+    <>
+      <div className="file-icicle-summary">
+        <p className="file-icicle-title">File Summary</p>
+        <svg ref={$summary} />
+      </div>
+      <InsDelChart currentPath={currentPath} />
+    </>
   );
 };
 

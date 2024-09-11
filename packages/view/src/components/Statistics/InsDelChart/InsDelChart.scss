@@ -1,10 +1,19 @@
 @import "styles/app";
 
 .ins-del-chart {
-  width: 16rem;
+  width: 20rem;
+  // position: absolute;
   text {
     fill: var(--primary-color);
     filter: invert(100) grayscale(100) contrast(100);
+  }
+
+  svg {
+    text {
+      fill: white !important;
+      color: white !important;
+      font-size: 30px !important;
+    }
   }
 }
 

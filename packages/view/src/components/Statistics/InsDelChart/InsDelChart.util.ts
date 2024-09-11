@@ -134,23 +134,30 @@ import { DataType } from "./InsDelChart.type";
 //   return data;
 // };
 
-export const convertFileChangesMapToDataType = (fileChangesMap: FileChangesMap): DataType => {
+export const convertFileChangesMapToDataType = (fileChangesMap: FileChangesMap, currentPath: string): DataType => {
   const listData: { name: string; category: string; value: number }[] = [];
 
   Object.entries(fileChangesMap).forEach(([path, { insertions, deletions }]) => {
-    if (insertions > 0) {
-      listData.push({
-        name: path,
-        category: "Mostly true",
-        value: insertions,
-      });
-    }
-    if (deletions > 0) {
-      listData.push({
-        name: path,
-        category: "Mostly false",
-        value: deletions,
-      });
+    const pathParts = path.split("/"); // 현재 경로 split
+
+    const isWithinCurrentPath =
+      pathParts.some((p) => p === currentPath) && pathParts.indexOf(currentPath) + 3 <= pathParts.length;
+
+    if (isWithinCurrentPath) {
+      if (insertions > 0) {
+        listData.push({
+          name: path,
+          category: "True",
+          value: insertions,
+        });
+      }
+      if (deletions > 0) {
+        listData.push({
+          name: path,
+          category: "False",
+          value: deletions,
+        });
+      }
     }
   });
 
@@ -159,8 +166,8 @@ export const convertFileChangesMapToDataType = (fileChangesMap: FileChangesMap):
     columns: ["speaker", "ruling", "count"],
     negative: "← Deletions",
     positive: "Insertions →",
-    negatives: ["Mostly false", "Flase"],
-    positives: ["Mostly true"],
+    negatives: ["Mostly false", "False"],
+    positives: ["Mostly true", "True"],
   };
   return data;
 };

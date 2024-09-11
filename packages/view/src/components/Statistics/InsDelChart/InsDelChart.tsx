@@ -7,7 +7,7 @@ import { useGetSelectedData } from "../Statistics.hook";
 import "./InsDelChart.scss";
 import { convertFileChangesMapToDataType } from "./InsDelChart.util";
 
-const drawIcicleTree = async ($target: RefObject<SVGSVGElement>, data: DataType) => {
+const drawInsDelChart = async ($target: RefObject<SVGSVGElement>, data: DataType) => {
   // if (!$target.current) return;
 
   // // Remove any existing content in the SVG
@@ -15,9 +15,9 @@ const drawIcicleTree = async ($target: RefObject<SVGSVGElement>, data: DataType)
 
   d3.select($target.current)
     .append("text")
-    .attr("x", 50)
-    .attr("y", 50)
-    .attr("fill", "red")
+    .attr("x", 100)
+    .attr("y", 100)
+    .attr("fill", "white")
     .text("Starting SVG generation...");
 
   const signs = new Map<string, number>([
@@ -34,7 +34,7 @@ const drawIcicleTree = async ($target: RefObject<SVGSVGElement>, data: DataType)
     ([, a]: [string, number | undefined]) => a as number
   );
 
-  const width = 928;
+  const width = 1200;
   const marginTop = 40;
   const marginRight = 30;
   const marginBottom = 0;
@@ -87,7 +87,7 @@ const drawIcicleTree = async ($target: RefObject<SVGSVGElement>, data: DataType)
   const svg = d3
     .select($target.current)
     .attr("viewBox", [0, 0, width, height])
-    .attr("style", "max-width: 100%; height: auto; font: 10px sans-serif;");
+    .attr("style", "max-width: 100%; height: auto; font: 20px sans-serif; background-color: white;");
 
   svg
     .append("g")
@@ -113,6 +113,13 @@ const drawIcicleTree = async ($target: RefObject<SVGSVGElement>, data: DataType)
   svg
     .append("g")
     .attr("transform", `translate(0,${marginTop})`)
+    // .call(
+    //   d3
+    //     .axisTop(x)
+    //     .ticks(width / 80)
+    //     .tickFormat(formatValue)
+    //     .tickSizeOuter(0)
+    // )
     .call((g) => {
       g.select(".domain").remove();
     })
@@ -120,16 +127,20 @@ const drawIcicleTree = async ($target: RefObject<SVGSVGElement>, data: DataType)
       g.append("text")
         .attr("x", x(0) + 20)
         .attr("y", -24)
-        .attr("fill", "currentColor")
+        .attr("fill", "#fff !important")
         .attr("text-anchor", "start")
+        .style("font-size", "30px")
+        // .style("color", "#fff")
         .text(data.positive);
     })
     .call((g) => {
       g.append("text")
         .attr("x", x(0) - 20)
         .attr("y", -24)
-        .attr("fill", "currentColor")
+        .attr("fill", "#fff")
         .attr("text-anchor", "end")
+        .style("font-size", "30px")
+        // .style("color", "#fff")
         .text(data.negative);
     });
 
@@ -144,6 +155,9 @@ const drawIcicleTree = async ($target: RefObject<SVGSVGElement>, data: DataType)
           const yPos = y(name); // y(name)의 결과를 확인
           return `translate(${x(min as number)},${yPos !== undefined ? yPos + y.bandwidth() / 2 : 0})`; // yPos가 undefined인 경우 0으로 처리
         })
+        .select("text")
+        .attr("fill", "white")
+        .style("font-size", "30px")
     )
     .call((g) => g.select(".domain").attr("transform", `translate(${x(0)},0)`));
 
@@ -151,39 +165,24 @@ const drawIcicleTree = async ($target: RefObject<SVGSVGElement>, data: DataType)
 
   return svgNode ? Object.assign(svgNode, { scales: { color } }) : "차트";
 };
-const destroyIcicleTree = ($target: RefObject<SVGSVGElement>) => {
+const destroyInsDelChart = ($target: RefObject<SVGSVGElement>) => {
   d3.select($target.current).selectAll("*").remove();
 };
 
-const InsDelChart = () => {
+const InsDelChart = ({ currentPath }: { currentPath: string }) => {
   const data = useGetSelectedData();
   const $summary = useRef<SVGSVGElement>(null);
-
-  // const data: DataType = {
-  //   listData: [
-  //     { name: "App.tsx", category: "Mostly false", value: 1000 },
-  //     { name: "App.tsx", category: "Mostly true", value: 123 },
-  //     { name: "index.ts", category: "Mostly true", value: 10 },
-  //     { name: "index.ts", category: "Mostly false", value: 222 },
-  //     { name: "src", category: "Mostly false", value: 524 },
-  //   ],
-  //   columns: ["speaker", "ruling", "count"],
-  //   negative: "← Deletions",
-  //   positive: "Insertions →",
-  //   negatives: ["Mostly false", "False"],
-  //   positives: ["Mostly true"],
-  // };
 
   useEffect(() => {
     if (data) {
       const treeData = getFileChangesMap(data);
-      drawIcicleTree($summary, convertFileChangesMapToDataType(treeData));
+      drawInsDelChart($summary, convertFileChangesMapToDataType(treeData, currentPath));
       // drawIcicleTree($summary, data);
     }
     return () => {
-      destroyIcicleTree($summary);
+      destroyInsDelChart($summary);
     };
-  }, [data]);
+  }, [data, currentPath]);
 
   if (!data) {
     return null;
@@ -192,6 +191,7 @@ const InsDelChart = () => {
   return (
     <div className="ins-del-chart">
       <span className="ins-del-chart-title">InsDelChart</span>
+      <span>{currentPath}</span>
       <svg ref={$summary} />
     </div>
   );
