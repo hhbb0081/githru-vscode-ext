@@ -87,7 +87,7 @@ const drawInsDelChart = async ($target: RefObject<SVGSVGElement>, data: DataType
   const svg = d3
     .select($target.current)
     .attr("viewBox", [0, 0, width, height])
-    .attr("style", "max-width: 100%; height: auto; font: 20px sans-serif; background-color: white;");
+    .attr("style", "width: 100%; max-width: 100%; height: auto; font: 20px sans-serif; padding-top: 10px;");
 
   svg
     .append("g")
@@ -130,7 +130,7 @@ const drawInsDelChart = async ($target: RefObject<SVGSVGElement>, data: DataType
         .attr("fill", "#fff !important")
         .attr("text-anchor", "start")
         .style("font-size", "30px")
-        // .style("color", "#fff")
+        .style("color", "#fff")
         .text(data.positive);
     })
     .call((g) => {
@@ -140,7 +140,7 @@ const drawInsDelChart = async ($target: RefObject<SVGSVGElement>, data: DataType
         .attr("fill", "#fff")
         .attr("text-anchor", "end")
         .style("font-size", "30px")
-        // .style("color", "#fff")
+        .style("color", "#fff")
         .text(data.negative);
     });
 
@@ -152,7 +152,7 @@ const drawInsDelChart = async ($target: RefObject<SVGSVGElement>, data: DataType
         .selectAll(".tick")
         .data(bias)
         .attr("transform", ([name, min]: [string, number | undefined]) => {
-          const yPos = y(name); // y(name)의 결과를 확인
+          const yPos = y(name);
           return `translate(${x(min as number)},${yPos !== undefined ? yPos + y.bandwidth() / 2 : 0})`; // yPos가 undefined인 경우 0으로 처리
         })
         .select("text")
@@ -174,7 +174,7 @@ const InsDelChart = ({ currentPath }: { currentPath: string }) => {
   const $summary = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
-    if (data) {
+    if (data && currentPath) {
       const treeData = getFileChangesMap(data);
       drawInsDelChart($summary, convertFileChangesMapToDataType(treeData, currentPath));
       // drawIcicleTree($summary, data);
@@ -191,7 +191,6 @@ const InsDelChart = ({ currentPath }: { currentPath: string }) => {
   return (
     <div className="ins-del-chart">
       <span className="ins-del-chart-title">InsDelChart</span>
-      <span>{currentPath}</span>
       <svg ref={$summary} />
     </div>
   );

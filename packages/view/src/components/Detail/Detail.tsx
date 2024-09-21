@@ -62,11 +62,11 @@ const Detail = ({ selectedData, clusterId, authSrcMap }: DetailProps) => {
     navigator.clipboard.writeText(id);
   };
 
-  const { setSelectedCommitId } = useGlobalData();
-  const onClickCommitNode = (commitId: string) => () => {
-    console.log(clusterId);
-    setSelectedCommitId(commitId);
-  };
+  // const { setSelectedCommitId } = useGlobalData();
+  // const onClickCommitNode = (commitId: string) => () => {
+  //   console.log(clusterId);
+  //   setSelectedCommitId(commitId);
+  // };
 
   if (!selectedData) return null;
 
@@ -81,31 +81,31 @@ const Detail = ({ selectedData, clusterId, authSrcMap }: DetailProps) => {
               key={id}
               className="detail__commit-item"
             >
-              <button
+              {/* <button
                 type="button"
                 className="commit-detail-button"
                 onClick={onClickCommitNode(id)}
-              >
-                <div className="commit-item__detail">
-                  <div className="commit-item__avatar-message">
-                    {authSrcMap && (
-                      <Author
-                        name={author.names.toString()}
-                        src={authSrcMap[author.names.toString()]}
-                      />
-                    )}
-                    <div className="commit-item__message-container">
-                      <span className="commit-item__message">{message}</span>
-                    </div>
-                    <span className="author-date">
-                      {author.names[0]}, {dayjs(commitDate).format("YY. M. DD. a h:mm")}
-                    </span>
+              > */}
+              <div className="commit-item__detail">
+                <div className="commit-item__avatar-message">
+                  {authSrcMap && (
+                    <Author
+                      name={author.names.toString()}
+                      src={authSrcMap[author.names.toString()]}
+                    />
+                  )}
+                  <div className="commit-item__message-container">
+                    <span className="commit-item__message">{message}</span>
                   </div>
-                  <span className="commit-item__author-date">
+                  <span className="author-date">
                     {author.names[0]}, {dayjs(commitDate).format("YY. M. DD. a h:mm")}
                   </span>
                 </div>
-              </button>
+                <span className="commit-item__author-date">
+                  {author.names[0]}, {dayjs(commitDate).format("YY. M. DD. a h:mm")}
+                </span>
+              </div>
+              {/* </button> */}
               <div className="commit-item__commit-id">
                 <a
                   href={`https://github.com/${owner}/${repo}/commit/${id}`}

@@ -4,11 +4,14 @@
   width: 20rem;
   // position: absolute;
   text {
-    fill: var(--primary-color);
-    filter: invert(100) grayscale(100) contrast(100);
+    // fill: var(--primary-color);
+    // filter: invert(100) grayscale(100) contrast(100);
+    font-size: 64px;
   }
 
   svg {
+    // padding-top: 20px;
+    width: 100%;
     text {
       fill: white !important;
       color: white !important;

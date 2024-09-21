@@ -1,7 +1,7 @@
 import type { HierarchyRectangularNode } from "d3";
 import * as d3 from "d3";
 import type { RefObject } from "react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { PRIMARY_COLOR_VARIABLE_NAME } from "../../../constants/constants";
 import { useGetSelectedData } from "../Statistics.hook";
@@ -21,8 +21,6 @@ import { getFileChangesTree } from "./FileIcicleSummary.util";
 import { InsDelChart } from "../InsDelChart";
 import "./FileIcicleSummary.scss";
 
-let currentPath: string;
-
 const partition = (data: FileChangesNode) => {
   const root = d3
     .hierarchy(data)
@@ -40,7 +38,11 @@ const labelVisible = (d: HierarchyRectangularNode<FileChangesNode>) =>
 const rectHeight = (d: HierarchyRectangularNode<FileChangesNode>) => d.x1 - d.x0 - Math.min(1, (d.x1 - d.x0) / 2);
 
 // Refer https://observablehq.com/@d3/zoomable-icicle
-const drawIcicleTree = async ($target: RefObject<SVGSVGElement>, data: FileChangesNode) => {
+const drawIcicleTree = async (
+  $target: RefObject<SVGSVGElement>,
+  data: FileChangesNode,
+  setCurrentPath: (path: string) => void
+) => {
   let focus: HierarchyRectangularNode<FileChangesNode> | null = null;
   const root = partition(data);
 
@@ -94,7 +96,9 @@ const drawIcicleTree = async ($target: RefObject<SVGSVGElement>, data: FileChang
     }
 
     focus = targetNode;
-    currentPath = targetNode.name;
+    console.log("🚀 ~ rect.on ~ targetNode:", targetNode.data.name);
+    setCurrentPath(targetNode.data.name);
+
     const isRootFocused = focus.depth === 0;
 
     root.each((d) => {
@@ -124,10 +128,11 @@ const destroyIcicleTree = ($target: RefObject<SVGSVGElement>) => {
 const FileIcicleSummary = () => {
   const data = useGetSelectedData();
   const $summary = useRef<SVGSVGElement>(null);
+  const [currentPath, setCurrentPath] = useState<string>("");
 
   useEffect(() => {
     if (data) {
-      drawIcicleTree($summary, getFileChangesTree(data));
+      drawIcicleTree($summary, getFileChangesTree(data), setCurrentPath);
     }
 
     // cleanup
