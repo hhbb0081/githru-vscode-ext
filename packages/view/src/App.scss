@@ -1,32 +1,17 @@
-@import "styles/_custom";
-
-// FIXME
-:root {
-  --primary-color: #ff8272;
-}
+@import "styles/app";
 
 body {
-  background: #212121;
-  color: #fff;
+  background: $color-background;
+  color: $color-white;
 }
 
 .header-container {
   position: relative;
   display: flex;
   height: 60px;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-}
-
-.header-buttons {
-  position: absolute;
-  right: 0;
-  display: flex;
-  align-items: center;
-
-  > *:not(:last-child) {
-    margin-right: 4px;
-  }
+  padding: 0 12px 0 20px;
 }
 
 .top-container {

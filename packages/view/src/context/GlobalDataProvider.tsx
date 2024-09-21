@@ -2,17 +2,16 @@ import type { PropsWithChildren } from "react";
 import { useMemo, useState } from "react";
 
 import { GlobalDataContext, type DateFilterRange } from "hooks";
+import { useLoadingStore } from "store";
 import type { ClusterNode } from "types";
 
 export const GlobalDataProvider = ({ children }: PropsWithChildren) => {
-  const [loading, setLoading] = useState(false);
-
   const [data, setData] = useState<ClusterNode[]>([]);
   const [filteredData, setFilteredData] = useState<ClusterNode[]>(data);
   const [selectedData, setSelectedData] = useState<ClusterNode[]>([]);
   const [selectedCommitId, setSelectedCommitId] = useState<string>("");
   const [filteredRange, setFilteredRange] = useState<DateFilterRange>(undefined);
-
+  const { setLoading } = useLoadingStore((state: any) => state);
   const [branchList, setBranchList] = useState<string[]>([]);
   const [selectedBranch, setSelectedBranch] = useState<string>(branchList?.[0]);
   const [owner, setOwner] = useState<string>("");
@@ -41,8 +40,6 @@ export const GlobalDataProvider = ({ children }: PropsWithChildren) => {
       setSelectedData,
       selectedCommitId,
       setSelectedCommitId,
-      loading,
-      setLoading,
       branchList,
       setBranchList,
       selectedBranch,
@@ -54,7 +51,7 @@ export const GlobalDataProvider = ({ children }: PropsWithChildren) => {
       repo,
       setRepo,
     }),
-    [data, filteredRange, filteredData, selectedCommitId, selectedData, branchList, selectedBranch, loading, owner, repo]
+    [data, filteredRange, filteredData, selectedData, branchList, selectedBranch, owner, repo]
   );
 
   return <GlobalDataContext.Provider value={value}>{children}</GlobalDataContext.Provider>;

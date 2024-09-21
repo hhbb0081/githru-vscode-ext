@@ -74,7 +74,8 @@ const drawIcicleTree = async ($target: RefObject<SVGSVGElement>, data: FileChang
     .attr("pointer-events", "none")
     .attr("x", 10)
     .attr("y", 25)
-    .attr("fill-opacity", (d) => +labelVisible(d));
+    .attr("fill-opacity", (d) => +labelVisible(d))
+    .attr("class", "file-icicle-summary__label");
 
   text.append("tspan").text((d) => d.data.name);
 
